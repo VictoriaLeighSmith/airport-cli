@@ -26,6 +26,7 @@ public class AirportReportsTest {
         String report = airportReports.airportsByCity(airports);
 
         String expected = """
+        
         AIRPORTS BY CITY
         ----------------------------------------
         Toronto:
