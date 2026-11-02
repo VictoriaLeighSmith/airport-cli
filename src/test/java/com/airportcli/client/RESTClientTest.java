@@ -1,6 +1,7 @@
 package com.airportcli.client;
 
 import com.airportcli.domain.Airport;
+import com.airportcli.domain.Passenger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -108,5 +109,53 @@ public class RESTClientTest {
         List<Airport> airports = restClient.buildAirportListFromResponse("Invalid JSON!");
 
         Assertions.assertTrue(airports.isEmpty());
+    }
+
+    @Test
+    public void testBuildPassengerListFromValidResponse() {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        String json = """
+                [
+                    {
+                        "id": 1,
+                        "firstName": "John",
+                        "lastName": "Smith",
+                        "phoneNumber": "709-555-1234",
+                        "city": {
+                            "id": 1,
+                            "name": "St. John's",
+                            "province": "Newfoundland and Labrador",
+                            "population": 110525
+                        },
+                        "aircraft": [
+                            {
+                                "id": 1,
+                                "type": "Boeing 737",
+                                "airlineName": "Air Canada",
+                                "numberOfPassengers": 150,
+                                "airports": [
+                                    {
+                                        "id": 1,
+                                        "name": "St. John's International Airport",
+                                        "code": "YYT"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+                """;
+
+        List<Passenger> passengers = restClient.buildPassengerListFromResponse(json);
+
+        Assertions.assertEquals(1, passengers.size());
+        Assertions.assertEquals("John", passengers.get(0).getFirstName());
+        Assertions.assertEquals("Smith", passengers.get(0).getLastName());
+        Assertions.assertEquals("709-555-1234", passengers.get(0).getPhoneNumber());
+        Assertions.assertEquals("St. John's", passengers.get(0).getCity().getName());
+        Assertions.assertEquals("Boeing 737", passengers.get(0).getAircraft().get(0).getType());
+        Assertions.assertEquals(1, passengers.get(0).getAircraft().get(0).getAirports().size());
+        Assertions.assertEquals("YYT", passengers.get(0).getAircraft().get(0).getAirports().get(0).getCode());
     }
 }

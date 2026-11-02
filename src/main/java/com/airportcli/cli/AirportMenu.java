@@ -2,7 +2,9 @@ package com.airportcli.cli;
 
 import com.airportcli.client.RESTClient;
 import com.airportcli.domain.Airport;
-import com.airportcli.reports.AirportReports;
+import com.airportcli.domain.Passenger;
+import com.airportcli.reports.AirportsByCityReport;
+import com.airportcli.reports.AirportsUsedByPassengersReport;
 
 import java.util.List;
 import java.util.Scanner;
@@ -49,7 +51,7 @@ public class AirportMenu {
                     System.out.println("[INFO] Displaying aircraft routes ...");
                     break;
                 case 4:
-                    System.out.println("[INFO] Displaying airports used by passengers ...");
+                    System.out.println(displayAirportsByPassengers(restClient));
                     break;
                 case 5:
                     System.out.println();
@@ -68,8 +70,17 @@ public class AirportMenu {
         String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/airports");
         List<Airport> airports = restClient.buildAirportListFromResponse(response);
 
-        AirportReports airportReports = new AirportReports();
+        AirportsByCityReport airportsByCityReport = new AirportsByCityReport();
 
-        return airportReports.airportsByCity(airports);
+        return airportsByCityReport.airportsByCity(airports);
+    }
+
+    public String displayAirportsByPassengers(RESTClient restClient) {
+        String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/passengers");
+        List<Passenger> passengers = restClient.buildPassengerListFromResponse(response);
+
+        AirportsUsedByPassengersReport airportsUsedByPassengersReport = new AirportsUsedByPassengersReport();
+
+        return airportsUsedByPassengersReport.airportsUsedByPassengers(passengers);
     }
 }
