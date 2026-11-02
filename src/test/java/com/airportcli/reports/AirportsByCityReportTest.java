@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AirportReportsTest {
+public class AirportsByCityReportTest {
 
     @Test
     public void testMultipleAirportsInSameCity() {
@@ -21,9 +21,9 @@ public class AirportReportsTest {
         airports.add(torontoAirport1);
         airports.add(torontoAirport2);
 
-        AirportReports airportReports = new AirportReports();
+        AirportsByCityReport airportsByCityReport = new AirportsByCityReport();
 
-        String report = airportReports.airportsByCity(airports);
+        String report = airportsByCityReport.airportsByCity(airports);
 
         String expected = """
         
@@ -53,9 +53,9 @@ public class AirportReportsTest {
         airports.add(torontoAirport2);
         airports.add(halifaxAirport);
 
-        AirportReports airportReports = new AirportReports();
+        AirportsByCityReport airportsByCityReport = new AirportsByCityReport();
 
-        String report = airportReports.airportsByCity(airports);
+        String report = airportsByCityReport.airportsByCity(airports);
 
         Assertions.assertTrue(report.contains("Toronto:\n- Toronto Pearson International Airport\n- Billy Bishop Toronto City Airport"));
         Assertions.assertTrue(report.contains("Halifax:\n- Halifax Stanfield Airport"));
@@ -64,9 +64,9 @@ public class AirportReportsTest {
     @Test
     public void testAirportsByCityWithEmptyList() {
         List<Airport> airports = new ArrayList<>();
-        AirportReports airportReports = new AirportReports();
+        AirportsByCityReport airportsByCityReport = new AirportsByCityReport();
 
-        String report = airportReports.airportsByCity(airports);
+        String report = airportsByCityReport.airportsByCity(airports);
 
         String expected = "No airports found.";
 

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AirportReports {
+public class AirportsByCityReport {
 
     public String airportsByCity(List<Airport> airports) {
         if (airports.isEmpty()) {

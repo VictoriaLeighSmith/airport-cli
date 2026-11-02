@@ -1,6 +1,7 @@
 package com.airportcli.client;
 
 import com.airportcli.domain.Airport;
+import com.airportcli.domain.Passenger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -55,5 +56,20 @@ public class RESTClient {
         }
 
         return airports;
+    }
+
+    public List<Passenger> buildPassengerListFromResponse(String response) {
+        List<Passenger> passengers = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        try {
+            passengers = objectMapper.readValue(response, new TypeReference<List<Passenger>>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return passengers;
     }
 }
