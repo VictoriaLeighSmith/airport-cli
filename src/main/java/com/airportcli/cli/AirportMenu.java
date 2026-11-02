@@ -1,7 +1,10 @@
 package com.airportcli.cli;
 
 import com.airportcli.client.RESTClient;
+import com.airportcli.domain.Airport;
+import com.airportcli.reports.AirportReports;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AirportMenu {
@@ -37,7 +40,7 @@ public class AirportMenu {
 
             switch (userChoice) {
                 case 1:
-                    System.out.println("[INFO] Displaying airports by city ...");
+                    System.out.println(displayAirportsByCity(restClient));
                     break;
                 case 2:
                     System.out.println("[INFO] Displaying aircraft by passenger ...");
@@ -59,5 +62,14 @@ public class AirportMenu {
                     System.out.println();
             }
         }
+    }
+
+    public String displayAirportsByCity(RESTClient restClient) {
+        String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/airports");
+        List<Airport> airports = restClient.buildAirportListFromResponse(response);
+
+        AirportReports airportReports = new AirportReports();
+
+        return airportReports.airportsByCity(airports);
     }
 }
