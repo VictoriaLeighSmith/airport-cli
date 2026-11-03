@@ -1,5 +1,6 @@
 package com.airportcli.client;
 
+import com.airportcli.domain.Aircraft;
 import com.airportcli.domain.Airport;
 import com.airportcli.domain.Passenger;
 import org.junit.jupiter.api.Assertions;
@@ -157,5 +158,39 @@ public class RESTClientTest {
         Assertions.assertEquals("Boeing 737", passengers.get(0).getAircraft().get(0).getType());
         Assertions.assertEquals(1, passengers.get(0).getAircraft().get(0).getAirports().size());
         Assertions.assertEquals("YYT", passengers.get(0).getAircraft().get(0).getAirports().get(0).getCode());
+    }
+
+    @Test
+    public void testBuildAircraftListFromValidResponse() {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        String json = """
+        [
+            {
+                "id": 1,
+                "type": "Boeing 737",
+                "airlineName": "Air Canada",
+                "numberOfPassengers": 180,
+                "passengers": [],
+                "airports": [
+                    {
+                        "id": 2,
+                        "name": "St. John's International Airport",
+                        "code": "YYT"
+                    }
+                ]
+            }
+        ]
+        """;
+
+        List<Aircraft> aircraft =
+                restClient.buildAircraftListFromResponse(json);
+
+        Assertions.assertEquals(1, aircraft.size());
+        Assertions.assertEquals("Boeing 737", aircraft.get(0).getType());
+        Assertions.assertEquals("Air Canada", aircraft.get(0).getAirlineName());
+        Assertions.assertEquals(1, aircraft.get(0).getAirports().size());
+        Assertions.assertEquals("YYT",
+                aircraft.get(0).getAirports().get(0).getCode());
     }
 }
