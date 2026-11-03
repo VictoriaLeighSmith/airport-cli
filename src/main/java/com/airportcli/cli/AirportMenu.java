@@ -1,11 +1,13 @@
 package com.airportcli.cli;
 
 import com.airportcli.client.RESTClient;
+import com.airportcli.domain.Aircraft;
 import com.airportcli.domain.Airport;
 import com.airportcli.domain.Passenger;
 import com.airportcli.reports.AirportsByCityReport;
 import com.airportcli.reports.AirportsUsedByPassengersReport;
 import com.airportcli.reports.AircraftByPassengerReport;
+import com.airportcli.reports.AircraftRoutesReport;
 
 import java.util.List;
 import java.util.Scanner;
@@ -49,7 +51,7 @@ public class AirportMenu {
                     System.out.println(displayAircraftByPassenger(restClient));
                     break;
                 case 3:
-                    System.out.println("[INFO] Displaying aircraft routes ...");
+                    System.out.println(displayAircraftRoutes(restClient));
                     break;
                 case 4:
                     System.out.println(displayAirportsByPassengers(restClient));
@@ -92,5 +94,14 @@ public class AirportMenu {
         AircraftByPassengerReport aircraftByPassengerReport = new AircraftByPassengerReport();
 
         return aircraftByPassengerReport.aircraftByPassenger(passengers);
+    }
+
+    public String displayAircraftRoutes(RESTClient restClient) {
+        String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/aircraft");
+        List<Aircraft> aircraft = restClient.buildAircraftListFromResponse(response);
+
+        AircraftRoutesReport aircraftRoutesReport = new AircraftRoutesReport();
+
+        return aircraftRoutesReport.aircraftRoutes(aircraft);
     }
 }
