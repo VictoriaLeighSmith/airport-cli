@@ -16,7 +16,8 @@ public class AircraftByPassengerReport {
         report.append("\n");
 
         for (Passenger passenger : passengers) {
-            report.append(passenger.getFirstName() + " " + passenger.getLastName() + "\n");
+            report.append(passenger.getFirstName() + " "
+                    + passenger.getLastName() + ":\n");
             if (passenger.getAircraft() == null || passenger.getAircraft().isEmpty()) {
                 report.append("- No aircraft found.\n");
             }else {
