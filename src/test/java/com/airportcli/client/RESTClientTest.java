@@ -6,6 +6,8 @@ import com.airportcli.domain.Passenger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,11 +41,12 @@ public class RESTClientTest {
         Assertions.assertEquals("Test Response", response);
     }
 
-    @Test
-    public void testUnsuccessfulGetRequest() throws InterruptedException, IOException {
+    @ParameterizedTest
+    @ValueSource(ints = {400, 401, 403, 404, 500, 503})
+    public void testUnsuccessfulGetRequest(int statusCode) throws InterruptedException, IOException {
         RESTClient restClient = new RESTClient(httpClient);
 
-        Mockito.when(httpResponse.statusCode()).thenReturn(404);
+        Mockito.when(httpResponse.statusCode()).thenReturn(statusCode);
         Mockito.when(httpClient.send(
                 Mockito.any(),
                 Mockito.any(HttpResponse.BodyHandler.class)
@@ -51,7 +54,40 @@ public class RESTClientTest {
 
         String response = restClient.getResponseFromHTTPRequest("https://jsonplaceholder.typicode.com/users");
 
-        Assertions.assertEquals("", response);
+        Assertions.assertNull(response);
+    }
+
+    @Test
+    public void testGetRequestIOException() throws InterruptedException, IOException {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        Mockito.when(httpClient.send(
+                Mockito.any(),
+                Mockito.any(HttpResponse.BodyHandler.class)
+        )).thenThrow(new IOException("Connection failed"));
+
+        String response = restClient.getResponseFromHTTPRequest("https://jsonplaceholder.typicode.com/users");
+
+        Assertions.assertNull(response);
+    }
+
+    @Test
+    public void testGetRequestInterruptedException() throws InterruptedException, IOException {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        Mockito.when(httpClient.send(
+                Mockito.any(),
+                Mockito.any(HttpResponse.BodyHandler.class)
+        )).thenThrow(new InterruptedException("Request interrupted"));
+
+        String response = restClient.getResponseFromHTTPRequest("https://jsonplaceholder.typicode.com/users");
+
+        try {
+            Assertions.assertNull(response);
+            Assertions.assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
+        }
     }
 
     @Test
@@ -109,7 +145,7 @@ public class RESTClientTest {
 
         List<Airport> airports = restClient.buildAirportListFromResponse("Invalid JSON!");
 
-        Assertions.assertTrue(airports.isEmpty());
+        Assertions.assertNull(airports);
     }
 
     @Test
@@ -161,6 +197,24 @@ public class RESTClientTest {
     }
 
     @Test
+    public void testBuildPassengerListFromEmptyResponse() {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        List<Passenger> passengers = restClient.buildPassengerListFromResponse("[]");
+
+        Assertions.assertTrue(passengers.isEmpty());
+    }
+
+    @Test
+    public void testBuildPassengerListFromInvalidResponse() {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        List<Passenger> passengers = restClient.buildPassengerListFromResponse("Invalid JSON!");
+
+        Assertions.assertNull(passengers);
+    }
+
+    @Test
     public void testBuildAircraftListFromValidResponse() {
         RESTClient restClient = new RESTClient(httpClient);
 
@@ -192,5 +246,23 @@ public class RESTClientTest {
         Assertions.assertEquals(1, aircraft.get(0).getAirports().size());
         Assertions.assertEquals("YYT",
                 aircraft.get(0).getAirports().get(0).getCode());
+    }
+
+    @Test
+    public void testBuildAircraftListFromEmptyResponse() {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        List<Aircraft> aircraft = restClient.buildAircraftListFromResponse("[]");
+
+        Assertions.assertTrue(aircraft.isEmpty());
+    }
+
+    @Test
+    public void testBuildAircraftListFromInvalidResponse() {
+        RESTClient restClient = new RESTClient(httpClient);
+
+        List<Aircraft> aircraft = restClient.buildAircraftListFromResponse("Invalid JSON!");
+
+        Assertions.assertNull(aircraft);
     }
 }

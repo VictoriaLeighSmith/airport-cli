@@ -111,9 +111,7 @@ public class AircraftByPassengerReportTest {
         AircraftByPassengerReport report = new AircraftByPassengerReport();
         String result = report.aircraftByPassenger(passengers);
 
-        Assertions.assertTrue(result.contains("John Smith:"));
-        Assertions.assertTrue(result.contains("Boeing 737"));
-        Assertions.assertTrue(result.contains("Jane Doe:"));
-        Assertions.assertTrue(result.contains("Airbus A320"));
+        Assertions.assertTrue(result.contains("John Smith:\n- Boeing 737 (Air Canada)"));
+        Assertions.assertTrue(result.contains("Jane Doe:\n- Airbus A320 (WestJet)"));
     }
 }

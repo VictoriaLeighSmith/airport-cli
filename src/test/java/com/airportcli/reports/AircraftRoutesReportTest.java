@@ -86,10 +86,8 @@ public class AircraftRoutesReportTest {
         AircraftRoutesReport report = new AircraftRoutesReport();
         String result = report.aircraftRoutes(aircraftList);
 
-        Assertions.assertTrue(result.contains("Boeing 737"));
-        Assertions.assertTrue(result.contains("St. John's International"));
-        Assertions.assertTrue(result.contains("Airbus A320"));
-        Assertions.assertTrue(result.contains("Toronto Pearson"));
+        Assertions.assertTrue(result.contains("Boeing 737 (Air Canada):\n- St. John's International"));
+        Assertions.assertTrue(result.contains("Airbus A320 (WestJet):\n- Toronto Pearson"));
     }
 
     @Test

@@ -23,13 +23,12 @@ public class AirportsUsedByPassengersReport {
         report.append("\n");
 
         for (Passenger passenger : passengers) {
-            ArrayList<String> airports = new ArrayList<>();
+            List<String> airports = new ArrayList<>();
 
             if (passenger.getAircraft() != null) {
                 for (Aircraft aircraft : passenger.getAircraft()) {
                     if (aircraft.getAirports() != null) {
                         for (Airport airport : aircraft.getAirports()) {
-
                             if (!airports.contains(airport.getName())) {
                                 airports.add(airport.getName());
                             }

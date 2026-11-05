@@ -2,7 +2,6 @@ package com.airportcli.reports;
 
 import com.airportcli.domain.Aircraft;
 import com.airportcli.domain.Airport;
-import com.airportcli.domain.City;
 import com.airportcli.domain.Passenger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

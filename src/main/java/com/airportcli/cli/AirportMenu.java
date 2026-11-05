@@ -59,7 +59,7 @@ public class AirportMenu {
                 case 5:
                     System.out.println();
                     System.out.println("Exiting...");
-                    running =  false;
+                    running = false;
                     break;
                 default:
                     System.out.println();
@@ -71,7 +71,16 @@ public class AirportMenu {
 
     public String displayAirportsByCity(RESTClient restClient) {
         String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/airports");
+
+        if (response == null) {
+            return "[ERROR] Airport data could not be retrieved.";
+        }
+
         List<Airport> airports = restClient.buildAirportListFromResponse(response);
+
+        if (airports == null) {
+            return "[ERROR] Airport data could not be processed.";
+        }
 
         AirportsByCityReport airportsByCityReport = new AirportsByCityReport();
 
@@ -80,7 +89,16 @@ public class AirportMenu {
 
     public String displayAirportsByPassengers(RESTClient restClient) {
         String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/passengers");
+
+        if (response == null) {
+            return "[ERROR] Passenger data could not be retrieved.";
+        }
+
         List<Passenger> passengers = restClient.buildPassengerListFromResponse(response);
+
+        if (passengers == null) {
+            return "[ERROR] Passenger data could not be processed.";
+        }
 
         AirportsUsedByPassengersReport airportsUsedByPassengersReport = new AirportsUsedByPassengersReport();
 
@@ -89,7 +107,16 @@ public class AirportMenu {
 
     public String displayAircraftByPassenger(RESTClient restClient) {
         String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/passengers");
+
+        if (response == null) {
+            return "[ERROR] Passenger data could not be retrieved.";
+        }
+
         List<Passenger> passengers = restClient.buildPassengerListFromResponse(response);
+
+        if (passengers == null) {
+            return "[ERROR] Passenger data could not be processed.";
+        }
 
         AircraftByPassengerReport aircraftByPassengerReport = new AircraftByPassengerReport();
 
@@ -98,7 +125,16 @@ public class AirportMenu {
 
     public String displayAircraftRoutes(RESTClient restClient) {
         String response = restClient.getResponseFromHTTPRequest("http://localhost:8080/api/aircraft");
+
+        if (response == null) {
+            return "[ERROR] Aircraft data could not be retrieved.";
+        }
+
         List<Aircraft> aircraft = restClient.buildAircraftListFromResponse(response);
+
+        if (aircraft == null) {
+            return "[ERROR] Aircraft data could not be processed.";
+        }
 
         AircraftRoutesReport aircraftRoutesReport = new AircraftRoutesReport();
 
