@@ -1,6 +1,8 @@
 package com.airportcli.reports;
+
 import com.airportcli.domain.Passenger;
 import com.airportcli.domain.Aircraft;
+
 import java.util.List;
 
 public class AircraftByPassengerReport {
@@ -8,6 +10,7 @@ public class AircraftByPassengerReport {
         if (passengers.isEmpty()) {
             return "No passengers found.";
         }
+
         StringBuilder report = new StringBuilder();
 
         report.append("\n");
@@ -20,12 +23,14 @@ public class AircraftByPassengerReport {
                     + passenger.getLastName() + ":\n");
             if (passenger.getAircraft() == null || passenger.getAircraft().isEmpty()) {
                 report.append("- No aircraft found.\n");
-            }else {
+            } else {
                 for (Aircraft aircraft : passenger.getAircraft()) {
                     report.append("- " + aircraft.getType()
                             + " (" + aircraft.getAirlineName() + ")\n");
                 }
             }
+
+            report.append("\n");
         }
 
         return report.toString();

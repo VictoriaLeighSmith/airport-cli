@@ -18,74 +18,56 @@ import java.util.List;
 
 public class RESTClient {
     private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
 
     public RESTClient(HttpClient httpClient) {
         this.httpClient = httpClient;
+
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public String getResponseFromHTTPRequest(String requestUrl) {
-        String responseBody = "";
+        String responseBody = null;
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(requestUrl)).GET().build();
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // We could be more elaborate here and handle status codes differently/only assign the response body in success cases?
             if (response.statusCode() == 200) {
                 responseBody = response.body();
-            } else {
-                System.out.println("Status Code: " + response.statusCode());
             }
-        } catch (IOException | InterruptedException e) {
-            // Printing stack trace for now like his example, we may want to change this to print out some user facing messaging.
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("[ERROR] HTTP request failed: " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("[ERROR] HTTP request interrupted: " + e.getMessage());
         }
 
         return responseBody;
     }
 
     public List<Airport> buildAirportListFromResponse(String response) {
-        List<Airport> airports = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         try {
-            airports = objectMapper.readValue(response, new TypeReference<List<Airport>>() {});
+            return objectMapper.readValue(response, new TypeReference<List<Airport>>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return null;
         }
-
-        return airports;
     }
 
     public List<Passenger> buildPassengerListFromResponse(String response) {
-        List<Passenger> passengers = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         try {
-            passengers = objectMapper.readValue(response, new TypeReference<List<Passenger>>() {});
+            return objectMapper.readValue(response, new TypeReference<List<Passenger>>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return null;
         }
-
-        return passengers;
     }
 
     public List<Aircraft> buildAircraftListFromResponse(String response) {
-        List<Aircraft> aircraft = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         try {
-            aircraft = objectMapper.readValue(response, new TypeReference<List<Aircraft>>() {});
+            return objectMapper.readValue(response, new TypeReference<List<Aircraft>>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return null;
         }
-
-        return aircraft;
     }
 }
